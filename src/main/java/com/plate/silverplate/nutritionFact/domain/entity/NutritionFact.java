@@ -14,7 +14,7 @@ public class NutritionFact extends BaseTimeEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "Food_CD")
+    @Column(name = "FOOD_CD")
     private String foodCD;
 
     @Column(name = "SAMPLING_REGION_NAME")
