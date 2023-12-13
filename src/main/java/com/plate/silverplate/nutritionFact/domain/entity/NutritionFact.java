@@ -1,4 +1,4 @@
-package com.plate.silverplate.domain;
+package com.plate.silverplate.nutritionFact.domain.entity;
 
 import com.plate.silverplate.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;

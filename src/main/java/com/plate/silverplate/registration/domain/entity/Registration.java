@@ -1,6 +1,7 @@
-package com.plate.silverplate.domain;
+package com.plate.silverplate.registration.domain.entity;
 
 import com.plate.silverplate.common.entity.BaseTimeEntity;
+import com.plate.silverplate.foodRegistration.domain.entity.FoodRegistration;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
