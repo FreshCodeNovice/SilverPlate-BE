@@ -1,6 +1,7 @@
-package com.plate.silverplate.domain;
+package com.plate.silverplate.mealDailyScore.domain.entity;
 
 import com.plate.silverplate.common.entity.BaseTimeEntity;
+import com.plate.silverplate.user.domain.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;

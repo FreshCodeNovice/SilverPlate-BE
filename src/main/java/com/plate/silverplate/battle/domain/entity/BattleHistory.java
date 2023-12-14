@@ -1,25 +1,20 @@
-package com.plate.silverplate.domain;
+package com.plate.silverplate.battle.domain.entity;
 
 import com.plate.silverplate.common.entity.BaseTimeEntity;
+import com.plate.silverplate.user.domain.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "favorite")
-public class Favorite extends BaseTimeEntity {
+@Table(name = "battle_history")
+public class BattleHistory extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Size(max = 255)
     @Column(name = "id", nullable = false)
     private Long id;
-
-    @Size(max = 50)
-    @Column(name = "title", length = 50)
-    private String title;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -28,14 +23,18 @@ public class Favorite extends BaseTimeEntity {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "meal_id", nullable = false)
-    private Meal meal;
+    @JoinColumn(name = "battle_id", nullable = false)
+    private Battle battle;
+
+    @NotNull
+    @Column(name = "current_yn", nullable = false)
+    private boolean currentYn = false;
 
     @Builder
-    public Favorite(Long id, String title, User user, Meal meal) {
+    public BattleHistory(Long id, User user, Battle battle, boolean currentYn) {
         this.id = id;
-        this.title = title;
         this.user = user;
-        this.meal = meal;
+        this.battle = battle;
+        this.currentYn = currentYn;
     }
 }

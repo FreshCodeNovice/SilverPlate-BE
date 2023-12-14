@@ -1,6 +1,8 @@
-package com.plate.silverplate.domain;
+package com.plate.silverplate.meal.domain.entity;
 
 import com.plate.silverplate.common.entity.BaseTimeEntity;
+import com.plate.silverplate.meal.domain.entity.Meal;
+import com.plate.silverplate.user.domain.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -9,8 +11,8 @@ import lombok.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "food_registration")
-public class FoodRegistration extends BaseTimeEntity {
+@Table(name = "favorite")
+public class Favorite extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Size(max = 255)
@@ -18,23 +20,24 @@ public class FoodRegistration extends BaseTimeEntity {
     private Long id;
 
     @Size(max = 50)
-    @Column(name = "name", length = 50)
-    private String name;
-
-    @Size(max = 256)
-    @Column(name = "request_content", length = 256)
-    private String requestContent;
+    @Column(name = "title", length = 50)
+    private String title;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "meal_id", nullable = false)
+    private Meal meal;
+
     @Builder
-    public FoodRegistration(Long id, String name, String requestContent, User user) {
+    public Favorite(Long id, String title, User user, Meal meal) {
         this.id = id;
-        this.name = name;
-        this.requestContent = requestContent;
+        this.title = title;
         this.user = user;
+        this.meal = meal;
     }
 }
