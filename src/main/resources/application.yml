@@ -17,6 +17,9 @@ spring:
         use_sql_comments: true
     defer-datasource-initialization: true
 
+nutrition :
+  key_id : ${NUTRITION_KEY_ID}
+  service_id : ${NUTRITION_SERVICE_ID}
 
 
 
