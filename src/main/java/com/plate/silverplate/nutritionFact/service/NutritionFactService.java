@@ -3,6 +3,8 @@ package com.plate.silverplate.nutritionFact.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.plate.silverplate.common.exception.ErrorCode;
+import com.plate.silverplate.common.exception.ErrorException;
 import com.plate.silverplate.nutritionFact.domain.entity.NutritionFact;
 import com.plate.silverplate.nutritionFact.domain.repo.NutritionFactRepository;
 import com.plate.silverplate.nutritionFact.dto.response.NutritionFactResponse;
@@ -18,7 +20,7 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class nutritionFactService {
+public class NutritionFactService {
 
     @Value("${nutrition.key_id}")
     private String keyId;
@@ -62,7 +64,7 @@ public class nutritionFactService {
         String response = getNutrition(startIdx, endIdx);
         List<NutritionFactResponse> responseList = getListNutritionDto(response);
         if( responseList == null || responseList.isEmpty() ){
-            throw new RuntimeException();
+            throw new ErrorException(ErrorCode.NON_EXISTENT_LIST_DTO);
         }
         List<NutritionFact> nutritionFacts = NutritionFactResponse.toListEntity(responseList);
         nutritionFactRepository.saveAll(nutritionFacts);
@@ -82,7 +84,7 @@ public class nutritionFactService {
 
             return objectMapper.readValue(json, new TypeReference<List<NutritionFactResponse>>(){});
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new ErrorException(ErrorCode.JSON_NOT_PROCESSING);
         }
     }
 
