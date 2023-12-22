@@ -32,7 +32,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # gradlew 파일 설정
+      # gradlew 파일 설정 
       - name: permission for gradlew
         run: chmod +x gradlew
 
