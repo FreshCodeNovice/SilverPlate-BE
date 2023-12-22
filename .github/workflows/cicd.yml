@@ -1,0 +1,58 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+name: Java CI with Gradle
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # jdk 설정
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'zule'
+
+      # gradlew 파일 설정
+      - name: permission for gradlew
+        run: chmod +x gradlew
+
+      # Spring Boot 어플리케이션 Build  (1) 우선 테스트 코드 없이 진행
+      - name: Spring Boot Build
+        run : ./gradlew clean build --exclude-task test
+
+
+        # DockerHub Login (2)
+      - name: docker login
+        run: aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{secrets.ECR_URI}}
+
+      # Docker 이미지 Build (3)
+      - name: docker image build
+        run: sudo docker build -t spring-boot .
+
+      # 도커 이미지에 태그 지정
+      - name: docker tag
+        run: docker tag spring-boot ${{secrets.ECR_URI}}
+
+      # Docker Hub push (4)
+      - name: AWS ECR push
+        run: docker push ${{secrets.ECR_URI}}
