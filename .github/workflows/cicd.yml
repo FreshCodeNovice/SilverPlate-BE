@@ -30,7 +30,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'zule'
+          distribution: 'temurin'
 
       # gradlew 파일 설정
       - name: permission for gradlew
