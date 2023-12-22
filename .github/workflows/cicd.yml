@@ -50,7 +50,8 @@ jobs:
 
         # AWS ECR Login (3)
       - name: docker login
-        run: aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{secrets.ECR_URI}}
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
       # Docker 이미지 Build (4)
       - name: docker image build
