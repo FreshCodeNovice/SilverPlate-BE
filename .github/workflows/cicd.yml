@@ -40,19 +40,26 @@ jobs:
       - name: Spring Boot Build
         run : ./gradlew clean build --exclude-task test
 
+      # Configure AWS Credentials (2) - AWS 접근 권한 취득(IAM)
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with: 
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
 
-        # DockerHub Login (2)
+        # AWS ECR Login (3)
       - name: docker login
         run: aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{secrets.ECR_URI}}
 
-      # Docker 이미지 Build (3)
+      # Docker 이미지 Build (4)
       - name: docker image build
-        run: sudo docker build -t spring-boot .
+        run: docker build -t spring-boot .
 
-      # 도커 이미지에 태그 지정
+      # 도커 이미지에 태그 지정 (5)
       - name: docker tag
         run: docker tag spring-boot ${{secrets.ECR_URI}}
 
-      # Docker Hub push (4)
+      # Docker Hub push (6)
       - name: AWS ECR push
         run: docker push ${{secrets.ECR_URI}}
