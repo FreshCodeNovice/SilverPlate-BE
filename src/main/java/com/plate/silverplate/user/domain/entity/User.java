@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Entity
 @Table(name = "user")
 public class User extends BaseTimeEntity {
@@ -19,48 +19,44 @@ public class User extends BaseTimeEntity {
 
     @Size(max = 30)
     @NotNull
-    @Column(name = "password", nullable = false, length = 30)
-    private String password;
-
-    @Size(max = 20)
-    @NotNull
-    @Column(name = "username", nullable = false, length = 20)
-    private String username;
-
-    @Size(max = 30)
-    @NotNull
-    @Column(name = "email", nullable = false, length = 30)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Size(max = 20)
     @NotNull
-    @Column(name = "role", nullable = false, length = 20)
-    private String role;
+    @Column(name = "role", nullable = false)
+    private Role role;
 
-    @Size(max = 40)
-    @NotNull
-    @Column(name = "provideId", nullable = false, length = 40)
-    private String provideId;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "user_profile_id")
+    private UserProfile userProfile;
 
-    @Size(max = 40)
-    @NotNull
-    @Column(name = "provider", nullable = false, length = 40)
-    private String provider;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_physcal_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_physcal_id")
     private UserPhysical userPhysical;
 
     @Builder
-    public User(Long id, String password, String username, String email, String role, String provideId, String provider, UserPhysical userPhysical) {
+    public User(Long id, String email, Role role, UserProfile userProfile, UserPhysical userPhysical) {
         this.id = id;
-        this.password = password;
-        this.username = username;
         this.email = email;
         this.role = role;
-        this.provideId = provideId;
-        this.provider = provider;
+        this.userProfile = userProfile;
         this.userPhysical = userPhysical;
+    }
+
+    public static User createUser(String email, String nickName, String provider, String providerId, String imageUrl) {
+        UserProfile profile = UserProfile.createProfile(nickName, provider, providerId, imageUrl);
+
+        User user = User.builder()
+                .email(email)
+                .role(Role.USER)
+                .build();
+
+        user.addUserProfile(profile);
+
+        return user;
+    }
+
+    private void addUserProfile(UserProfile profile) {
+        this.userProfile = profile;
     }
 }
