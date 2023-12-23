@@ -61,7 +61,7 @@ jobs:
       - name: docker tag
         run: docker tag spring-boot ${{secrets.ECR_URI}}
 
-      # AWS ECR push (6)
+      # AWS ECR push (6) 
       - name: AWS ECR push
         run: docker push ${{secrets.ECR_URI}}
       
