@@ -49,7 +49,7 @@ jobs:
           aws-region: ap-northeast-2
 
         # AWS ECR Login (3)
-      - name: docker login
+      - name: aws ecr login
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
