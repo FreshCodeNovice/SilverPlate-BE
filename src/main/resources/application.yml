@@ -19,6 +19,10 @@ spring:
   profiles:
     include: oauth
 
+nutrition :
+  key_id : ${NUTRITION_KEY_ID}
+  service_id : ${NUTRITION_SERVICE_ID}
+
 jwt:
   token:
     secret-key: ${JWT_SECRET}
