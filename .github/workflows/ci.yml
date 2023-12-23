@@ -65,11 +65,7 @@ jobs:
       - name: AWS ECR push
         run: docker push ${{secrets.ECR_URI}}
 
-      #  Add github ip to AWS (7) 
-      - name: Add GitHub IP to AWS
-        run: |
-          aws ec2 authorize-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port ${{ secrets.EC2_SSH_PORT }} --cidr ${{ steps.ip.outputs.ipv4 }}/24
-
+      
       # AWS EC2 Server Connect & Docker 명령어 실행 (8)  
       - name: AWS EC2 Connection
         uses: appleboy/ssh-action@v0.1.6
@@ -86,7 +82,4 @@ jobs:
             sudo docker run ${{ secrets.ENVIRONMENT }} -d -p 8080:8080 --name spring-boot spring-boot:latest
             
 
-      # REMOVE Github IP FROM security group (9)
-      - name: Remove IP FROM security group
-        run: |
-          aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+      
