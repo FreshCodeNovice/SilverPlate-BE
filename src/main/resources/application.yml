@@ -16,8 +16,31 @@ spring:
         format_sql: true
         use_sql_comments: true
     defer-datasource-initialization: true
+  profiles:
+    include: oauth
 
+jwt:
+  token:
+    secret-key: ${JWT_SECRET}
+  access-token:
+    expire-length: 1800000
+  refresh-token:
+    expire-length: 1209600000
 
+redis:
+  host: localhost
+  port: 6379
 
+logging:
+  level:
+    org:
+      hibernate:
+        type: trace
+        stat: debug
+        orm:
+          jdbc:
+            bind: trace
+    org.springframework.web.reactive.function.client.ExchangeFunctions: TRACE
 
-
+cors:
+  allowed-origins: "*"
