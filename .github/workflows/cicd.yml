@@ -91,7 +91,7 @@ jobs:
             docker pull ${{secrets.ECR_URI}}
             sudo docker run ${{ secrets.ENVIRONMENT }} -d -p 8080:8080 ${{secrets.ECR_URI}}
       
-      # REMOVE Github IP FROM security group (10)
+      # REMOVE Github IP FROM security group (10) 
       - name: Remove IP FROM security group
         run: |
           aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port ${{ secrets.EC2_SSH_PORT }} --cidr ${{ steps.ip.outputs.ipv4 }}/32
