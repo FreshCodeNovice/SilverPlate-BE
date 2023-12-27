@@ -84,12 +84,12 @@ jobs:
           password: ${{ secrets.EC2_PASSWORD }} 
           port: ${{ secrets.EC2_SSH_PORT }}
           script: |
-            sudo docker stop ${{secrets.ECR_URI}}
-            sudo docker rm ${{secrets.ECR_URI}}
+            sudo docker stop spring-boot
+            sudo docker rm spring-boot
             sudo docker rmi -f ${{secrets.ECR_URI}}
             aws ecr get-login-password --profile ${{ secrets.IAM_NAME }} --region ap-northeast-2 | docker login --username AWS --password-stdin ${{secrets.ECR_URI}}
             docker pull ${{secrets.ECR_URI}}
-            sudo docker run ${{ secrets.ENVIRONMENT }} -d -p 8080:8080 ${{secrets.ECR_URI}}
+            sudo docker run ${{ secrets.ENVIRONMENT }} -d -p 8080:8080 --name spring-boot ${{secrets.ECR_URI}} 
       
       # REMOVE Github IP FROM security group (10) 
       - name: Remove IP FROM security group
