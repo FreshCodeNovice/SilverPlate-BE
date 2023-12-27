@@ -20,6 +20,7 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@EnableScheduling    
 public class NutritionFactService {
 
     @Value("${nutrition.key_id}")
@@ -30,7 +31,8 @@ public class NutritionFactService {
     private final NutritionFactRepository nutritionFactRepository;
 
     // 우선 스케줄러와 데이터를 박아놓는 거 중에서 고민중
-    @PostConstruct
+    @Transactional
+    @Scheduled(cron = "0 0 4 * * *")
     public void listCreate(){
         for (int i = 0; i < 92; i++) {
             int startIdx = 1 + 1000*i;
