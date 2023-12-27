@@ -10,7 +10,6 @@ import lombok.*;
 @Table(name = "nutrition_fact")
 public class NutritionFact extends BaseTimeEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -45,40 +44,40 @@ public class NutritionFact extends BaseTimeEntity {
     private String subRefName;
 
     @Column(name = "SERVING_SIZE")
-    private long servingSize;
+    private double servingSize;
 
     @Column(name = "SERVING_UNIT")
-    private long servingUnit;
+    private String servingUnit;
 
     @Column(name = "NUTR_CONT1")
-    private long nutrCont1;
+    private double nutrCont1;
 
     @Column(name = "NUTR_CONT2")
-    private long nutrCont2;
+    private double nutrCont2;
 
     @Column(name = "NUTR_CONT3")
-    private long nutrCont3;
+    private double nutrCont3;
 
     @Column(name = "NUTR_CONT4")
-    private long nutrCont4;
+    private double nutrCont4;
 
     @Column(name = "NUTR_CONT5")
-    private long nutrCont5;
+    private double nutrCont5;
 
     @Column(name = "NUTR_CONT6")
-    private long nutrCont6;
+    private double nutrCont6;
 
     @Column(name = "NUTR_CONT7")
-    private long nutrCont7;
+    private double nutrCont7;
 
     @Column(name = "NUTR_CONT8")
-    private long nutrCont8;
+    private double nutrCont8;
 
     @Column(name = "NUTR_CONT9")
-    private long nutrCont9;
+    private double nutrCont9;
 
     @Builder
-    public NutritionFact(Long id, String foodCD, String samplingRegionName, String samplingMonthName, String samplingRegionCD, String samplingMonthCD, String groupName, String descKor, int researchYear, String makeName, String subRefName, long servingSize, long servingUnit, long nutrCont1, long nutrCont2, long nutrCont3, long nutrCont4, long nutrCont5, long nutrCont6, long nutrCont7, long nutrCont8, long nutrCont9) {
+    public NutritionFact(Long id, String foodCD, String samplingRegionName, String samplingMonthName, String samplingRegionCD, String samplingMonthCD, String groupName, String descKor, int researchYear, String makeName, String subRefName, double servingSize, String servingUnit, double nutrCont1, double nutrCont2, double nutrCont3, double nutrCont4, double nutrCont5, double nutrCont6, double nutrCont7, double nutrCont8, double nutrCont9) {
         this.id = id;
         this.foodCD = foodCD;
         this.samplingRegionName = samplingRegionName;
