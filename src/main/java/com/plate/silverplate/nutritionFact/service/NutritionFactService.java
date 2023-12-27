@@ -8,6 +8,8 @@ import com.plate.silverplate.common.exception.ErrorException;
 import com.plate.silverplate.nutritionFact.domain.entity.NutritionFact;
 import com.plate.silverplate.nutritionFact.domain.repo.NutritionFactRepository;
 import com.plate.silverplate.nutritionFact.dto.response.NutritionFactResponse;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
