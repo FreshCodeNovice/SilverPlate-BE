@@ -1,29 +1,18 @@
 package com.plate.silverplate.user.domain.dto;
 
-import com.plate.silverplate.user.domain.entity.Role;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Getter
 @NoArgsConstructor
+@Getter
 public class LoginResponse {
-    private Long id;
-    private String nickName;
-    private String email;
-    private String imageUrl;
-    private Role role;
-    private String tokenType;
     private String accessToken;
-    private String refreshToken;
+    private boolean firstLogin;
 
     @Builder
-    public LoginResponse(Long id, String nickName, String email, String imageUrl, Role role, String tokenType, String accessToken, String refreshToken) {
-        this.id = id;
-        this.nickName = nickName;
-        this.email = email;
-        this.imageUrl = imageUrl;
-        this.role = role;
-        this.tokenType = tokenType;
+    public LoginResponse(String accessToken, boolean firstLogin) {
         this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
+        this.firstLogin = firstLogin;
     }
 }
