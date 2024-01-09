@@ -9,7 +9,7 @@ spring:
     driver-class-name: org.mariadb.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
@@ -18,6 +18,10 @@ spring:
     defer-datasource-initialization: true
   profiles:
     include: oauth
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
 
 nutrition :
   key_id : ${NUTRITION_KEY_ID}
@@ -30,10 +34,6 @@ jwt:
     expire-length: 1800000
   refresh-token:
     expire-length: 1209600000
-
-redis:
-  host: localhost
-  port: 6379
 
 logging:
   level:
