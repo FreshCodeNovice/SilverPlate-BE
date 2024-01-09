@@ -18,11 +18,12 @@ spring:
     defer-datasource-initialization: true
   profiles:
     include: oauth
-  data:
-    redis:
-      host: ${REDIS_HOST}
-      port: ${REDIS_PORT}
-
+    
+  logging:
+    discord:
+      webhook-url: ${DISCORD_WEBHOOK_URL}
+    config: classpath:logback.xml
+    
 nutrition :
   key_id : ${NUTRITION_KEY_ID}
   service_id : ${NUTRITION_SERVICE_ID}
