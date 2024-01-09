@@ -23,6 +23,11 @@ spring:
     discord:
       webhook-url: ${DISCORD_WEBHOOK_URL}
     config: classpath:logback.xml
+
+    data:
+      redis:
+        host: ${REDIS_HOST}
+        port: ${REDIS_PORT}
     
 nutrition :
   key_id : ${NUTRITION_KEY_ID}
