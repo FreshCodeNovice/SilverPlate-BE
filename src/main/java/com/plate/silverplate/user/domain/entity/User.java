@@ -24,7 +24,7 @@ public class User extends BaseTimeEntity {
 
     @NotNull
     @Column(name = "role", nullable = false)
-    private Role role;
+    private String role;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "user_profile_id")
@@ -35,7 +35,7 @@ public class User extends BaseTimeEntity {
     private UserPhysical userPhysical;
 
     @Builder
-    public User(Long id, String email, Role role, UserProfile userProfile, UserPhysical userPhysical) {
+    public User(Long id, String email, String role, UserProfile userProfile, UserPhysical userPhysical) {
         this.id = id;
         this.email = email;
         this.role = role;
@@ -43,20 +43,24 @@ public class User extends BaseTimeEntity {
         this.userPhysical = userPhysical;
     }
 
-    public static User createUser(String email, String nickName, String provider, String providerId, String imageUrl) {
-        UserProfile profile = UserProfile.createProfile(nickName, provider, providerId, imageUrl);
+    public static User createUser(String email, String nickName, String provider, String imageUrl) {
+        UserProfile profile = UserProfile.builder()
+                .nickName(nickName)
+                .provider(provider)
+                .imageUrl(imageUrl)
+                .build();
 
         User user = User.builder()
                 .email(email)
-                .role(Role.USER)
+                .role("ROLE_USER")
                 .build();
 
-        user.addUserProfile(profile);
+        user.updateUserProfile(profile);
 
         return user;
     }
 
-    private void addUserProfile(UserProfile profile) {
+    public void updateUserProfile(UserProfile profile) {
         this.userProfile = profile;
     }
 }

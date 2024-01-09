@@ -1,5 +1,10 @@
 package com.plate.silverplate.config;
 
+import com.plate.silverplate.common.exception.MyAuthenticationFailureHandler;
+import com.plate.silverplate.common.exception.MyAuthenticationSuccessHandler;
+import com.plate.silverplate.user.jwt.fillter.JwtAuthFilter;
+import com.plate.silverplate.user.jwt.fillter.JwtExceptionFilter;
+import com.plate.silverplate.user.service.OauthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -19,6 +25,18 @@ import java.util.List;
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig {
+    // filter
+    private final JwtAuthFilter jwtAuthFilter;
+    private final JwtExceptionFilter jwtExceptionFilter;
+
+    // service
+    private final OauthService oAuth2UserService;
+
+    // handler
+    private final MyAuthenticationSuccessHandler oAuth2LoginSuccessHandler;
+    private final MyAuthenticationFailureHandler oAuth2LoginFailureHandler;
+
+
     @Value("${cors.allowed-origins}")
     String[] corsOrigins;
 
@@ -33,7 +51,14 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/**").permitAll()
+                                .requestMatchers("/**").permitAll()         // TODO: 권한에 따른 접근 가능 url 설정 예정
+                )
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtExceptionFilter, JwtAuthFilter.class)
+                .oauth2Login(oauth2 -> oauth2.userInfoEndpoint(
+                        userInfo -> userInfo.userService(oAuth2UserService))
+                        .failureHandler(oAuth2LoginFailureHandler)
+                        .successHandler(oAuth2LoginSuccessHandler)
                 )
                 .build();
     }
