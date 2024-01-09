@@ -9,10 +9,10 @@ import com.plate.silverplate.nutritionFact.domain.entity.NutritionFact;
 import com.plate.silverplate.nutritionFact.domain.repo.NutritionFactRepository;
 import com.plate.silverplate.nutritionFact.dto.response.NutritionFactResponse;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClient;
@@ -36,7 +36,8 @@ public class NutritionFactService {
 
     private final RestTemplate restTemplate;
     // 우선 스케줄러와 데이터를 박아놓는 거 중에서 고민중
-    @Scheduled(cron = "30 50 17 * * *")
+    @Scheduled(cron = "0 0 4 * * *")
+    @Transactional
 //    @PostConstruct
     public void listCreate(){
         Long countAll = nutritionFactRepository.countBy();
@@ -62,6 +63,7 @@ public class NutritionFactService {
                 .body(String.class);
 
     }
+
 
 
     /*
