@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum ErrorCode {
     JSON_NOT_PROCESSING(HttpStatus.BAD_REQUEST,"서버 내부적인 JSON 에러"),
-    NON_EXISTENT_LIST_DTO(HttpStatus.BAD_REQUEST, "List DTO가 존재하지 않습니다.");
+    NON_EXISTENT_LIST_DTO(HttpStatus.BAD_REQUEST, "List DTO가 존재하지 않습니다."),
+    UNAUTHORIZED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "권한없는 Refresh Token입니다."),
+    NON_EXISTENT_EMAIL(HttpStatus.BAD_REQUEST, "해당 EMAIL의 사용자가 존재하지 않습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
