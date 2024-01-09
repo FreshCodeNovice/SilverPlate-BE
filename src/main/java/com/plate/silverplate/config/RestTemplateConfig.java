@@ -1,37 +1,31 @@
 package com.plate.silverplate.config;
 
+import com.plate.silverplate.common.exception.ErrorCode;
+import com.plate.silverplate.common.exception.ErrorException;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.client.ClientHttpRequestInterceptor;
-import org.springframework.retry.policy.SimpleRetryPolicy;
-import org.springframework.retry.support.RetryTemplate;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.SocketTimeoutException;
 import java.time.Duration;
 
 @Configuration
+@Slf4j
 public class RestTemplateConfig {
     @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplateBuilder()
-                .setConnectTimeout(Duration.ofSeconds(5))
-                .setReadTimeout(Duration.ofSeconds(5))
-                .additionalInterceptors(clientHttpRequestInterceptor())
+    public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
+
+        return restTemplateBuilder
+                .setConnectTimeout(Duration.ofSeconds(10))
+                .setReadTimeout(Duration.ofSeconds(10))
                 .build();
+
+
     }
 
-    // 우선 runTimeException
-    public ClientHttpRequestInterceptor clientHttpRequestInterceptor() {
-        return (request, body, execution) -> {
-            RetryTemplate retryTemplate = new RetryTemplate();
-            retryTemplate.setRetryPolicy(new SimpleRetryPolicy(3));
-            try {
-                return retryTemplate.execute(context -> execution.execute(request, body));
-            } catch (Throwable throwable) {
-                throw new RuntimeException(throwable);
-            }
-        };
-    }
 
 }
