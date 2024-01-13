@@ -48,6 +48,7 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
         if (isExist) {
             LoginResponse tokenResponse = LoginResponse.builder()
                     .accessToken(token.getAccessToken())
+                    .refreshToken(token.getRefreshToken())
                     .firstLogin(false)
                     .build();
             String jsonBody = objectMapper.writeValueAsString(tokenResponse);
