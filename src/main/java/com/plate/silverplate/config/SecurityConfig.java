@@ -5,6 +5,8 @@ import com.plate.silverplate.common.exception.MyAuthenticationSuccessHandler;
 import com.plate.silverplate.user.jwt.fillter.JwtAuthFilter;
 import com.plate.silverplate.user.jwt.fillter.JwtExceptionFilter;
 import com.plate.silverplate.user.service.OauthService;
+import com.plate.silverplate.user.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -30,7 +32,8 @@ public class SecurityConfig {
     private final JwtExceptionFilter jwtExceptionFilter;
 
     // service
-    private final OauthService oAuth2UserService;
+    private final OauthService oauthService;
+    private final UserService userService;
 
     // handler
     private final MyAuthenticationSuccessHandler oAuth2LoginSuccessHandler;
@@ -51,21 +54,26 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/**").permitAll()         // TODO: 권한에 따른 접근 가능 url 설정 예정
+                                .requestMatchers("/oauth2/**").permitAll()
+                                .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtExceptionFilter, JwtAuthFilter.class)
                 .oauth2Login(oauth2 -> oauth2.userInfoEndpoint(
-                        userInfo -> userInfo.userService(oAuth2UserService))
+                        userInfo -> userInfo.userService(oauthService))
                         .failureHandler(oAuth2LoginFailureHandler)
                         .successHandler(oAuth2LoginSuccessHandler)
                 )
+                .logout(logout -> logout.permitAll()
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            userService.logout(request.getHeader("Authorization"));
+                            response.setStatus(HttpServletResponse.SC_OK);
+                        }))
                 .build();
     }
 
     @Bean
     public CorsConfigurationSource configurationSource() {
-        // TODO: 나중에 클라이언트 주소만 허용할 예정
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOriginPatterns(List.of(corsOrigins));
