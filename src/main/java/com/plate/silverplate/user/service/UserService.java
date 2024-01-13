@@ -20,14 +20,10 @@ public class UserService {
     public TokenResponse accessTokenByRefreshToken(String accessTokenHeader, String refreshToken) {
         String accessToken = jwtUtil.resolveToken(accessTokenHeader);
 
-        if(!jwtUtil.verifyToken(refreshToken)) {
-            log.info("Expired Token");
-            throw new ErrorException(ErrorCode.UNAUTHORIZED_REFRESH_TOKEN);
-        }
-
         String id = jwtUtil.getUid(accessToken);
         String data = redisService.getValues(id);
-        if (!data.equals(refreshToken)) {
+
+        if (data==null || !data.equals(refreshToken)) {
             log.info("Invalid Token");
             throw new ErrorException(ErrorCode.UNAUTHORIZED_REFRESH_TOKEN);
         }
@@ -40,6 +36,8 @@ public class UserService {
     @Transactional
     public void logout(String accessTokenHeader) {
         String accessToken = jwtUtil.resolveToken(accessTokenHeader);
+
+        jwtUtil.verifyToken(accessToken);
 
         String id = jwtUtil.getUid(accessToken);
         long time = jwtUtil.getExpiration(accessToken);     // access token 만료까지 남은 시간
