@@ -21,7 +21,6 @@ public class UserProfile {
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
-
     @Column(name = "provider", nullable = false, length = 40)
     private String provider;
 
@@ -31,5 +30,10 @@ public class UserProfile {
         this.nickName = nickName;
         this.imageUrl = imageUrl;
         this.provider = provider;
+    }
+
+    public void updateProfileInfo(String nickName, String imageUrl) {
+        this.nickName = nickName;
+        this.imageUrl = imageUrl;
     }
 }
