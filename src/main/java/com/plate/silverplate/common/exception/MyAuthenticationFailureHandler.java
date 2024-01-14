@@ -2,7 +2,6 @@ package com.plate.silverplate.common.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -18,14 +17,17 @@ import java.time.LocalDateTime;
 @Slf4j
 public class MyAuthenticationFailureHandler implements AuthenticationFailureHandler {
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        // TODO: 적절한 에러코드로 변경
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
-        response.setStatus(HttpStatus.BAD_REQUEST.value());
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode errorJson = mapper.createObjectNode();
-        errorJson.put("status", HttpStatus.BAD_REQUEST.value());
+
+        errorJson.put("status", HttpStatus.UNAUTHORIZED.value());
         errorJson.put("timestamp", LocalDateTime.now().toString());
+        errorJson.put("message", exception.getMessage());
+
         response.getWriter().write(mapper.writeValueAsString(errorJson));
     }
 }

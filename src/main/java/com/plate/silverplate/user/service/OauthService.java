@@ -3,6 +3,7 @@ package com.plate.silverplate.user.service;
 import com.plate.silverplate.user.domain.dto.OAuth2Attribute;
 import com.plate.silverplate.user.domain.entity.User;
 import com.plate.silverplate.user.domain.entity.UserProfile;
+import com.plate.silverplate.user.repository.UserProfileRepository;
 import com.plate.silverplate.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ import java.util.Optional;
 @Service
 public class OauthService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
     private final UserRepository userRepository;
+    private final UserProfileRepository userProfileRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -51,8 +53,6 @@ public class OauthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
         // 이메일로 가입된 회원인지 조회한다.
         Optional<User> findUser = userRepository.findByEmail(email);
 
-        log.error((String) memberAttribute.get("id"));
-
         if (findUser.isEmpty()) {
             // 회원이 존재하지 않는 경우
             memberAttribute.put("exist", false);
@@ -61,21 +61,20 @@ public class OauthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
                     memberAttribute, "email");
         }
 
-        UserProfile oldProfile = findUser.get().getUserProfile();
-        UserProfile newProfile = UserProfile.builder()
-                .nickName(oAuth2Attribute.getName())
-                .provider(oAuth2Attribute.getProvider())
-                .imageUrl(oAuth2Attribute.getPicture())
-                .build();
-
-        // 프로필이 변경되었으면 갱신
-        if (!oldProfile.equals(newProfile)) {
-            findUser.get().updateUserProfile(newProfile);
-            userRepository.save(findUser.get());
-        }
-
         // 회원이 존재할 경우
         memberAttribute.put("exist", true);
+
+        UserProfile userProfile = findUser.get().getUserProfile();
+        String nickName = oAuth2Attribute.getName();
+        String imageUrl = oAuth2Attribute.getPicture();
+
+        // 프로필이 변경되었으면 갱신
+        if (!userProfile.getImageUrl().equals(imageUrl)
+                || !userProfile.getNickName().equals(nickName)) {
+            userProfile.updateProfileInfo(nickName, imageUrl);
+            userProfileRepository.save(userProfile);
+        }
+
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority(findUser.get().getRole())),
                 memberAttribute, "email");
