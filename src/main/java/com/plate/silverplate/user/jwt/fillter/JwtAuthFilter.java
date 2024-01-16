@@ -45,7 +45,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         // AccessToken 만료 여부 확인
-        if (!jwtUtil.verifyToken(accessToken)) {
+        if (!request.getServletPath().equals("/reissue") && !jwtUtil.verifyToken(accessToken)) {
             throw new JwtException("만료된 Access Token입니다.");
         }
 
