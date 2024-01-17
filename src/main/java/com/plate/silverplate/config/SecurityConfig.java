@@ -66,6 +66,7 @@ public class SecurityConfig {
                         .successHandler(oAuth2LoginSuccessHandler)
                 )
                 .logout(logout -> logout.permitAll()
+                        .logoutUrl("/api/v1/logout")
                         .logoutSuccessHandler((request, response, authentication) -> {
                             userService.logout(request.getHeader("Authorization"));
                             response.setStatus(HttpServletResponse.SC_OK);
