@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/userPhysicals")
 @RequiredArgsConstructor
 @RestController
 public class UserPhysicalController {
     private final UserPhysicalService userPhysicalService;
 
-    @PostMapping("/userPhysicals")
+    @PostMapping("")
     public ResponseEntity<String> createUserPhysical(@AuthenticationPrincipal User user,
                                                      @Valid @RequestBody UserPhysicalRequest physicalRequest) {
         Long createdId = userPhysicalService.createUserPhysical(physicalRequest, user);
