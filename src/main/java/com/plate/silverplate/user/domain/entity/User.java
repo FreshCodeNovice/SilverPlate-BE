@@ -63,4 +63,8 @@ public class User extends BaseTimeEntity {
     public void updateUserProfile(UserProfile profile) {
         this.userProfile = profile;
     }
+
+    public void updateUserPhysical(UserPhysical userPhysical) {
+        this.userPhysical = userPhysical;
+    }
 }

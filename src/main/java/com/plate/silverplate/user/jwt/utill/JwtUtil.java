@@ -2,10 +2,7 @@ package com.plate.silverplate.user.jwt.utill;
 
 import com.plate.silverplate.user.domain.dto.GeneratedToken;
 import com.plate.silverplate.user.service.RedisService;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -95,12 +92,24 @@ public class JwtUtil {
 
     // 토큰에서 email 추출
     public String getUid(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+        try {
+            return Jwts.parser()
+                    .setSigningKey(secretKey)
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject();
+        } catch (ExpiredJwtException e) {
+            return e.getClaims().getSubject();
+        }
     }
 
     // 토큰에서 권한 추출
     public String getRole(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("role", String.class);
+        try {
+            return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("role", String.class);
+        } catch (ExpiredJwtException e) {
+            return e.getClaims().get("role", String.class);
+        }
     }
 
     //JWT 토큰의 남은 유효 시간 추출
