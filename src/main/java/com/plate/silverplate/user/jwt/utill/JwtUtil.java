@@ -2,10 +2,7 @@ package com.plate.silverplate.user.jwt.utill;
 
 import com.plate.silverplate.user.domain.dto.GeneratedToken;
 import com.plate.silverplate.user.service.RedisService;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -87,10 +84,16 @@ public class JwtUtil {
             return claims.getBody()
                     .getExpiration()
                     .after(new Date());  // 만료 시간이 현재 시간 이후인지 확인하여 유효성 검사 결과를 반환
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return false;
-        }
+            } catch (MalformedJwtException e) {
+                log.info("Invalid JWT Token", e);
+            } catch (ExpiredJwtException e) {
+                log.info("Expired JWT Token", e);
+            } catch (UnsupportedJwtException e) {
+                log.info("Unsupported JWT Token", e);
+            } catch (IllegalArgumentException e) {
+                log.info("JWT claims string is empty.", e);
+            }
+        return false;
     }
 
     // 토큰에서 email 추출
