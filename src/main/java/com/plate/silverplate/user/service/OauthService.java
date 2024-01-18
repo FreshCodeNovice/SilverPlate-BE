@@ -15,7 +15,6 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.Map;
@@ -54,8 +53,10 @@ public class OauthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
         Optional<User> findUser = userRepository.findByEmail(email);
 
         if (findUser.isEmpty()) {
-            // 회원이 존재하지 않는 경우
+            // 회원이 존재하지 않는 경우 회원가입
             memberAttribute.put("exist", false);
+            save(email, memberAttribute);
+
             return new DefaultOAuth2User(
                     Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
                     memberAttribute, "email");
@@ -63,32 +64,29 @@ public class OauthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
 
         // 회원이 존재할 경우
         memberAttribute.put("exist", true);
-
-        UserProfile userProfile = findUser.get().getUserProfile();
-        String nickName = oAuth2Attribute.getName();
-        String imageUrl = oAuth2Attribute.getPicture();
-
         // 프로필이 변경되었으면 갱신
-        if (!userProfile.getImageUrl().equals(imageUrl)
-                || !userProfile.getNickName().equals(nickName)) {
-            userProfile.updateProfileInfo(nickName, imageUrl);
-            userProfileRepository.save(userProfile);
-        }
+        update(findUser.get().getUserProfile(), oAuth2Attribute);
 
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority(findUser.get().getRole())),
                 memberAttribute, "email");
     }
 
-    @Transactional
-    public void save(OAuth2User oAuth2User) {
-        String email = oAuth2User.getAttribute("email");
-        String provider = oAuth2User.getAttribute("provider");
-        String name = oAuth2User.getAttribute("name");
-        String imageUrl = oAuth2User.getAttribute("picture");
+    private void save(String email, Map<String, Object> memberAttribute) {
+        String provider = (String) memberAttribute.get("provider");
+        String name = (String) memberAttribute.get("name");
+        String imageUrl = (String) memberAttribute.get("picture");
 
         User user = User.createUser(email, name, provider, imageUrl);
         userRepository.save(user);
+    }
+
+    private void update(UserProfile userProfile, OAuth2Attribute oAuth2Attribute) {
+        if (!userProfile.getNickName().equals(oAuth2Attribute.getName())
+                || !userProfile.getImageUrl().equals(oAuth2Attribute.getPicture())) {
+            userProfile.updateProfileInfo(oAuth2Attribute.getName(), oAuth2Attribute.getPicture());
+            userProfileRepository.save(userProfile);
+        }
     }
 }
 
