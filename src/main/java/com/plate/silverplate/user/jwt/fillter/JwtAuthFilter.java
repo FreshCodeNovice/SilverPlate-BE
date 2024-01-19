@@ -37,9 +37,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         String accessToken = resolveToken(request);
 
-        // 토큰 검사 생략(모두 허용 URL의 경우 토큰 검사 통과)
-        if (!StringUtils.hasText(accessToken)) {
-            doFilter(request, response, filterChain);
+        // 토큰 검사 생략
+        if (request.getServletPath().equals("/api/v1/reissue") || !StringUtils.hasText(accessToken)) {
+            filterChain.doFilter(request, response);
             return;
         }
 

@@ -75,7 +75,7 @@ public class JwtUtil {
     public boolean verifyToken(String token) {
         try {
             if (redisService.getValues(token) != null && redisService.getValues(token).equals("logout")) {
-                return false;
+                throw new JwtException("Invalid JWT Token - logout");
             }
             Jws<Claims> claims = Jwts.parser()
                     .setSigningKey(secretKey) // 비밀키를 설정하여 파싱한다.
@@ -101,12 +101,24 @@ public class JwtUtil {
 
     // 토큰에서 email 추출
     public String getUid(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+        try {
+            return Jwts.parser()
+                    .setSigningKey(secretKey)
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject();
+        } catch (ExpiredJwtException e) {
+            return e.getClaims().getSubject();
+        }
     }
 
     // 토큰에서 권한 추출
     public String getRole(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("role", String.class);
+        try {
+            return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("role", String.class);
+        } catch (ExpiredJwtException e) {
+            return e.getClaims().get("role", String.class);
+        }
     }
 
     //JWT 토큰의 남은 유효 시간 추출
