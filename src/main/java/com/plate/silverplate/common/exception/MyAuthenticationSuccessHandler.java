@@ -27,41 +27,41 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
         // 인증된 사용자 정보
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         String email = oAuth2User.getAttribute("email");
-
-        // 회원 존재 여부
-        boolean isExist = oAuth2User.getAttribute("exist");
         String role = oAuth2User.getAuthorities().stream()
                 .findFirst()
                 .orElseThrow(IllegalAccessError::new)
                 .getAuthority();
 
+        // 회원 존재 여부
+        boolean isExist = oAuth2User.getAttribute("exist");
+
         // 토큰 생성
         GeneratedToken token = jwtUtil.generateToken(email, role);
 
+        String targetUrl = buildTargetUrl(isExist, token.getAccessToken());
+
+        response.addHeader("Authorization", token.getRefreshToken());
+
+        log.info("redirect : {}", targetUrl);
+
+        getRedirectStrategy().sendRedirect(request, response, targetUrl);
+    }
+
+    private String buildTargetUrl(boolean isExist, String accessToken) {
+        String baseUrl = "http://localhost:3000/";
+
         if (isExist) {
-            String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/loginSuccess")
-                    .queryParam("access_token", token.getAccessToken())
+            return UriComponentsBuilder.fromUriString(baseUrl + "login/success")
+                    .queryParam("access_token", accessToken)
                     .build()
                     .encode(StandardCharsets.UTF_8)
                     .toUriString();
-
-            response.addHeader("Authorization", token.getRefreshToken());
-
-            log.info("redirect : {}", targetUrl);
-
-            getRedirectStrategy().sendRedirect(request, response, targetUrl);
         } else {
-            String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/signUp")
-                    .queryParam("access_token", token.getAccessToken())
+            return UriComponentsBuilder.fromUriString(baseUrl + "signup")
+                    .queryParam("access_token", accessToken)
                     .build()
                     .encode(StandardCharsets.UTF_8)
                     .toUriString();
-
-            response.addHeader("Authorization", token.getRefreshToken());
-
-            log.info("redirect : {}", targetUrl);
-
-            getRedirectStrategy().sendRedirect(request, response, targetUrl);
         }
     }
 }
