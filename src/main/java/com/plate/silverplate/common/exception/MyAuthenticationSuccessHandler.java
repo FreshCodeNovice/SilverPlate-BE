@@ -53,7 +53,6 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
         } else {
             String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/signUp")
                     .queryParam("access_token", token.getAccessToken())
-                    .queryParam("refresh_token", token.getRefreshToken())
                     .build()
                     .encode(StandardCharsets.UTF_8)
                     .toUriString();

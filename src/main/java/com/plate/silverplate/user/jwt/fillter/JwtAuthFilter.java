@@ -5,7 +5,6 @@ import com.plate.silverplate.common.exception.ErrorException;
 import com.plate.silverplate.user.domain.entity.User;
 import com.plate.silverplate.user.jwt.utill.JwtUtil;
 import com.plate.silverplate.user.repository.UserRepository;
-import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,11 +41,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (!StringUtils.hasText(accessToken)) {
             doFilter(request, response, filterChain);
             return;
-        }
-
-        // AccessToken 만료 여부 확인
-        if (!jwtUtil.verifyToken(accessToken)) {
-            throw new JwtException("만료된 Access Token입니다.");
         }
 
         if (jwtUtil.verifyToken(accessToken)) {
