@@ -75,7 +75,7 @@ public class JwtUtil {
     public boolean verifyToken(String token) {
         try {
             if (redisService.getValues(token) != null && redisService.getValues(token).equals("logout")) {
-                return false;
+                throw new JwtException("Invalid JWT Token - logout");
             }
             Jws<Claims> claims = Jwts.parser()
                     .setSigningKey(secretKey) // 비밀키를 설정하여 파싱한다.
@@ -84,10 +84,19 @@ public class JwtUtil {
             return claims.getBody()
                     .getExpiration()
                     .after(new Date());  // 만료 시간이 현재 시간 이후인지 확인하여 유효성 검사 결과를 반환
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return false;
-        }
+            } catch (MalformedJwtException e) {
+                log.info("Invalid JWT Token", e);
+                throw new JwtException("Invalid JWT Token", e);
+            } catch (ExpiredJwtException e) {
+                log.info("Expired JWT Token", e);
+                throw new JwtException("Expired JWT Token", e);
+            } catch (UnsupportedJwtException e) {
+                log.info("Unsupported JWT Token", e);
+                throw new JwtException("Unsupported JWT Token", e);
+            } catch (IllegalArgumentException e) {
+                log.info("JWT claims string is empty.", e);
+                throw new JwtException("JWT claims string is empty.", e);
+            }
     }
 
     // 토큰에서 email 추출
