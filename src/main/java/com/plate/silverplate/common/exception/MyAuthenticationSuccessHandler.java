@@ -48,20 +48,17 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
     }
 
     private String buildTargetUrl(boolean isExist, String accessToken) {
-        String baseUrl = "http://localhost:3000/";
+        String baseUrl = "http://localhost:3000/users/login";
+        UriComponentsBuilder urlBuilder = UriComponentsBuilder.fromUriString(baseUrl)
+                .queryParam("access_token", accessToken).encode(StandardCharsets.UTF_8);
 
         if (isExist) {
-            return UriComponentsBuilder.fromUriString(baseUrl + "login/success")
-                    .queryParam("access_token", accessToken)
+            return urlBuilder.queryParam("is_first","false")
                     .build()
-                    .encode(StandardCharsets.UTF_8)
-                    .toUriString();
-        } else {
-            return UriComponentsBuilder.fromUriString(baseUrl + "signup")
-                    .queryParam("access_token", accessToken)
-                    .build()
-                    .encode(StandardCharsets.UTF_8)
                     .toUriString();
         }
+        return urlBuilder.queryParam("is_first","true")
+                .build()
+                .toUriString();
     }
 }
