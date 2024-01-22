@@ -9,7 +9,6 @@ import com.plate.silverplate.nutritionFact.domain.entity.NutritionFact;
 import com.plate.silverplate.nutritionFact.domain.repo.NutritionFactRepository;
 import com.plate.silverplate.nutritionFact.dto.response.NutritionFactResponse;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -99,6 +98,15 @@ public class NutritionFactService {
         } catch (JsonProcessingException e) {
             throw new ErrorException(ErrorCode.JSON_NOT_PROCESSING);
         }
+    }
+
+    /*
+    * 음식 영양정보 id를 통해 음식 영양정보 데이터 가져오는 메소드
+    * 값이 없을 경우 NotFound 예외 발생
+    * */
+    public NutritionFact findId(Long id){
+        return nutritionFactRepository.findById(id)
+                .orElseThrow(()-> new ErrorException(ErrorCode.NOT_FOUND_NUTRITION_FACT));
     }
 
 }
