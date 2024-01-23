@@ -35,10 +35,7 @@ jwt:
   refresh-token:
     expire-length: 1209600000
 
-logging:
-  discord:
-    webhook-url: ${DISCORD_WEBHOOK_URL}
-  config: classpath:logback.xml  
+logging:  
   level:
     org:
       hibernate:
