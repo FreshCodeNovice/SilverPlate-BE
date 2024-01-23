@@ -52,7 +52,7 @@ public class MealService {
     * */
     @Transactional
     public void createMealList(MealCreateRequest mealCreateRequest,Meal meal){
-        for (MealListCreateRequest mealListCreateRequest : mealCreateRequest.filterMealList()) {
+        for (MealListCreateRequest mealListCreateRequest : mealCreateRequest.mealList()) {
             NutritionFact nutritionFact = nutritionFactService.findId(mealListCreateRequest.nutritionFactId());
             MealList mealList = MealList.builder()
                     .meal(meal)
