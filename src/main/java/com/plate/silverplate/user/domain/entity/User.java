@@ -30,7 +30,7 @@ public class User extends BaseTimeEntity {
     @JoinColumn(name = "user_profile_id")
     private UserProfile userProfile;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "user_physcal_id")
     private UserPhysical userPhysical;
 
@@ -62,5 +62,9 @@ public class User extends BaseTimeEntity {
 
     public void updateUserProfile(UserProfile profile) {
         this.userProfile = profile;
+    }
+
+    public void updateUserPhysical(UserPhysical userPhysical) {
+        this.userPhysical = userPhysical;
     }
 }

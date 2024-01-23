@@ -5,7 +5,6 @@ import com.plate.silverplate.common.exception.ErrorException;
 import com.plate.silverplate.user.domain.entity.User;
 import com.plate.silverplate.user.jwt.utill.JwtUtil;
 import com.plate.silverplate.user.repository.UserRepository;
-import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,18 +32,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
         String accessToken = resolveToken(request);
 
-        // 토큰 검사 생략(모두 허용 URL의 경우 토큰 검사 통과)
-        if (!StringUtils.hasText(accessToken)) {
-            doFilter(request, response, filterChain);
+        // 토큰 검사 생략
+        if (request.getServletPath().equals("/api/v1/reissue") || !StringUtils.hasText(accessToken)) {
+            filterChain.doFilter(request, response);
             return;
-        }
-
-        // AccessToken 만료 여부 확인
-        if (!jwtUtil.verifyToken(accessToken)) {
-            throw new JwtException("만료된 Access Token입니다.");
         }
 
         if (jwtUtil.verifyToken(accessToken)) {
@@ -61,7 +57,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     // request Header에서 토큰 추출
-    public String resolveToken(HttpServletRequest httpServletRequest) {
+    private String resolveToken(HttpServletRequest httpServletRequest) {
         String bearerToken = httpServletRequest.getHeader("Authorization");
 
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
@@ -72,7 +68,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     // Authentication 생성
-    public Authentication getAuthentication(User user) {
+    private Authentication getAuthentication(User user) {
         return new UsernamePasswordAuthenticationToken(user, "",
                 List.of(new SimpleGrantedAuthority(user.getRole())));
     }

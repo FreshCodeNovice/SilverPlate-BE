@@ -2,9 +2,10 @@ package com.plate.silverplate.userPhysical.domain.entity;
 
 import com.plate.silverplate.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -16,29 +17,24 @@ public class UserPhysical extends BaseTimeEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Size(max = 1)
-    @NotNull
-    @Column(name = "gender", nullable = false, length = 1)
-    private String gender;
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "gender", nullable = false)
+    private Gender gender;
 
-    @NotNull
     @Column(name = "height", nullable = false)
-    private int height;
+    private float height;
 
-    @NotNull
     @Column(name = "weight", nullable = false)
-    private int weight;
+    private float weight;
 
-    @NotNull
     @Column(name = "age", nullable = false)
     private int age;
 
-    @NotNull
     @Column(name = "activity_coefficient", nullable = false)
     private int activityCoefficient;
 
     @Builder
-    public UserPhysical(Long id, String gender, int height, int weight, int age, int activityCoefficient) {
+    public UserPhysical(Long id, Gender gender, float height, float weight, int age, int activityCoefficient) {
         this.id = id;
         this.gender = gender;
         this.height = height;

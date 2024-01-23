@@ -1,14 +1,18 @@
 package com.plate.silverplate.user.domain.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Getter
-@AllArgsConstructor
-@Builder @ToString
 public class GeneratedToken {
     private String accessToken;
     private String refreshToken;
+
+    @Builder
+    public GeneratedToken(String accessToken, String refreshToken) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+    }
 }

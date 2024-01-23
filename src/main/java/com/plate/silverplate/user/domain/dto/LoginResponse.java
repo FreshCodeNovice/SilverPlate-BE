@@ -8,11 +8,13 @@ import lombok.NoArgsConstructor;
 @Getter
 public class LoginResponse {
     private String accessToken;
+    private String refreshToken;
     private boolean firstLogin;
 
     @Builder
-    public LoginResponse(String accessToken, boolean firstLogin) {
+    public LoginResponse(String accessToken, String refreshToken, boolean firstLogin) {
         this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
         this.firstLogin = firstLogin;
     }
 }

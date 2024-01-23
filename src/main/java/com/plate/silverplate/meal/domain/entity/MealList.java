@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -26,10 +27,14 @@ public class MealList extends BaseTimeEntity {
     @JoinColumn(name = "nutrition_fact_id", nullable = false)
     private NutritionFact nutritionFact;
 
+    @NotNull
+    @Column(name = "gram", nullable = false)
+    private double gram;
     @Builder
-    public MealList(Long id, Meal meal, NutritionFact nutritionFact) {
+    public MealList(Long id, Meal meal, NutritionFact nutritionFact,double gram) {
         this.id = id;
         this.meal = meal;
+        this.gram = gram;
         this.nutritionFact = nutritionFact;
     }
 }
