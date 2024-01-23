@@ -1,5 +1,4 @@
-spring:
-  logging:
+logging:
     discord:
       webhook-url: ${DISCORD_WEBHOOK_URL}
-    config: classpath:logback.xml
+    config: classpath:logback.xml  
