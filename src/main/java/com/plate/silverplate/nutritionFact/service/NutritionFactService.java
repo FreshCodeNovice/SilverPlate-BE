@@ -8,6 +8,7 @@ import com.plate.silverplate.common.exception.ErrorException;
 import com.plate.silverplate.nutritionFact.domain.entity.NutritionFact;
 import com.plate.silverplate.nutritionFact.domain.repo.NutritionFactRepository;
 import com.plate.silverplate.nutritionFact.dto.response.NutritionFactResponse;
+import jakarta.annotation.PostConstruct;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,7 +53,7 @@ public class NutritionFactService {
     /*
      * url에 있는 값 String 형태로 받아오는 메소드
      * */
-    private String getNutrition(int startIdx, int endIdx){
+    public String getNutrition(int startIdx, int endIdx){
 
         RestClient restClient = RestClient.create(restTemplate);
 
