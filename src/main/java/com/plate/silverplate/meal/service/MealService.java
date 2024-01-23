@@ -52,7 +52,6 @@ public class MealService {
     * */
     @Transactional
     public void createMealList(MealCreateRequest mealCreateRequest,Meal meal){
-        List<MealList> list = new ArrayList<>();
         for (MealListCreateRequest mealListCreateRequest : mealCreateRequest.filterMealList()) {
             NutritionFact nutritionFact = nutritionFactService.findId(mealListCreateRequest.nutritionFactId());
             MealList mealList = MealList.builder()
@@ -60,8 +59,7 @@ public class MealService {
                     .gram(mealListCreateRequest.gram())
                     .nutritionFact(nutritionFact)
                     .build();
-            list.add(mealList);
+            mealListRepository.save(mealList);
         }
-        mealListRepository.saveAll(list);
     }
 }
