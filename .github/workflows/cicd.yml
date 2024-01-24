@@ -8,8 +8,6 @@
 name: Java CI with Gradle
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -86,10 +84,12 @@ jobs:
           script: |
             sudo docker stop spring-boot
             sudo docker rm spring-boot
+            sudo docker stop redis
+            sudo doker rm redis
             sudo docker rmi -f ${{secrets.ECR_URI}}
             aws ecr get-login-password --profile ${{ secrets.IAM_NAME }} --region ap-northeast-2 | docker login --username AWS --password-stdin ${{secrets.ECR_URI}}
             docker pull ${{secrets.ECR_URI}}
-            sudo docker run ${{ secrets.ENVIRONMENT }} -d -p 8080:8080 --name spring-boot ${{secrets.ECR_URI}} 
+            dokcer-compose up -d 
       
       # REMOVE Github IP FROM security group (10) 
       - name: Remove IP FROM security group
