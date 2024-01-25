@@ -1,6 +1,7 @@
 package com.plate.silverplate.meal.domain.entity;
 
 import com.plate.silverplate.common.entity.BaseTimeEntity;
+import com.plate.silverplate.meal.dto.request.FavoriteCreateRequest;
 import com.plate.silverplate.user.domain.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -14,12 +15,10 @@ import lombok.*;
 public class Favorite extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Size(max = 255)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Size(max = 50)
-    @Column(name = "title", length = 50)
+    @Column(name = "title", length = 15)
     private String title;
 
 
@@ -29,7 +28,7 @@ public class Favorite extends BaseTimeEntity {
     private Meal meal;
 
     @Builder
-    public Favorite(Long id, String title, User user, Meal meal) {
+    public Favorite(Long id, String title,  Meal meal) {
         this.id = id;
         this.title = title;
         this.meal = meal;
