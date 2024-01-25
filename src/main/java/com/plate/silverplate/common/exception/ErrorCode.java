@@ -12,7 +12,8 @@ public enum ErrorCode {
     UNAUTHORIZED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "권한없는 Refresh Token입니다."),
     NON_EXISTENT_EMAIL(HttpStatus.NOT_FOUND, "해당 EMAIL의 사용자가 존재하지 않습니다."),
     NOT_FOUND_NUTRITION_FACT(HttpStatus.NOT_FOUND,"음식 영양정보를 찾을 수 없습니다."),
-    NON_EXISTENT_USER(HttpStatus.NOT_FOUND, "해당 사용자의 신체 정보가 존재하지 않습니다.");
+    NON_EXISTENT_USER(HttpStatus.NOT_FOUND, "해당 사용자의 신체 정보가 존재하지 않습니다."),
+    NOT_FOUND_MEAL(HttpStatus.NOT_FOUND, "해당하는 식단 정보가 존재하지 않습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
