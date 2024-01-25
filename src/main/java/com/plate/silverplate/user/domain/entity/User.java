@@ -1,11 +1,12 @@
 package com.plate.silverplate.user.domain.entity;
 
 import com.plate.silverplate.common.entity.BaseTimeEntity;
-import com.plate.silverplate.userPhysical.domain.entity.UserPhysical;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
@@ -30,17 +31,12 @@ public class User extends BaseTimeEntity {
     @JoinColumn(name = "user_profile_id")
     private UserProfile userProfile;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "user_physcal_id")
-    private UserPhysical userPhysical;
-
     @Builder
-    public User(Long id, String email, String role, UserProfile userProfile, UserPhysical userPhysical) {
+    public User(Long id, String email, String role, UserProfile userProfile) {
         this.id = id;
         this.email = email;
         this.role = role;
         this.userProfile = userProfile;
-        this.userPhysical = userPhysical;
     }
 
     public static User createUser(String email, String nickName, String provider, String imageUrl) {
@@ -62,9 +58,5 @@ public class User extends BaseTimeEntity {
 
     public void updateUserProfile(UserProfile profile) {
         this.userProfile = profile;
-    }
-
-    public void updateUserPhysical(UserPhysical userPhysical) {
-        this.userPhysical = userPhysical;
     }
 }

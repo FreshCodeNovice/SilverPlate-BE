@@ -1,4 +1,4 @@
-package com.plate.silverplate.userPhysical.domain.dto;
+package com.plate.silverplate.userPhysical.domain.dto.request;
 
 import com.plate.silverplate.userPhysical.domain.entity.Gender;
 import jakarta.validation.constraints.*;
