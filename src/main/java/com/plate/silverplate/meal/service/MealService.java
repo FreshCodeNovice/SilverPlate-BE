@@ -1,5 +1,7 @@
 package com.plate.silverplate.meal.service;
 
+import com.plate.silverplate.common.exception.ErrorCode;
+import com.plate.silverplate.common.exception.ErrorException;
 import com.plate.silverplate.meal.domain.entity.Meal;
 import com.plate.silverplate.meal.domain.entity.MealList;
 import com.plate.silverplate.meal.domain.repository.MealListRepository;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -61,5 +64,19 @@ public class MealService {
                     .build();
             mealListRepository.save(mealList);
         }
+    }
+
+    /*
+    * mealId를 통해 Meal을 구해주는 로직
+    * meal에 user값이 현재 user가 아닐 시 예외 값 출력
+    * */
+    @Transactional
+    public Meal findMeal(User user,Long mealId){
+        Meal meal = mealRepository.findById(mealId)
+                .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_MEAL));
+        if(!meal.getUser().equals(user)){
+            throw new ErrorException(ErrorCode.NOT_FOUND_MEAL);
+        }
+        return meal;
     }
 }
