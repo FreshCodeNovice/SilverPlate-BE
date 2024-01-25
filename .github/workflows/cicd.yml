@@ -82,12 +82,12 @@ jobs:
           password: ${{ secrets.EC2_PASSWORD }} 
           port: ${{ secrets.EC2_SSH_PORT }}
           script: |
-            sudo docker stop spring-boot
-            sudo docker rm spring-boot
-            sudo docker stop redis
-            sudo doker rm redis
             sudo docker rmi -f ${{secrets.ECR_URI}}
             aws ecr get-login-password --profile ${{ secrets.IAM_NAME }} --region ap-northeast-2 | docker login --username AWS --password-stdin ${{secrets.ECR_URI}}
+            docker stop spring-boot
+            docker rm spring-boot
+            docker stop redis
+            doker rm redis
             docker pull ${{secrets.ECR_URI}}
             dokcer-compose up -d 
       
