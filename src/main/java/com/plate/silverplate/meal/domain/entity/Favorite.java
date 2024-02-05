@@ -2,6 +2,7 @@ package com.plate.silverplate.meal.domain.entity;
 
 import com.plate.silverplate.common.entity.BaseTimeEntity;
 import com.plate.silverplate.meal.dto.request.FavoriteCreateRequest;
+import com.plate.silverplate.meal.dto.request.FavoriteUpdateRequest;
 import com.plate.silverplate.user.domain.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -24,13 +25,17 @@ public class Favorite extends BaseTimeEntity {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "meal_id", nullable = false)
-    private Meal meal;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Builder
-    public Favorite(Long id, String title,  Meal meal) {
+    public Favorite(Long id, String title,  User user) {
         this.id = id;
         this.title = title;
-        this.meal = meal;
+        this.user = user;
+    }
+
+    public void updateFavorite(FavoriteUpdateRequest favoriteUpdateRequest){
+        this.title = favoriteUpdateRequest.title();
     }
 }
