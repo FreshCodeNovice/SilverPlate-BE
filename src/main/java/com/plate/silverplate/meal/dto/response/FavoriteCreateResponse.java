@@ -5,11 +5,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public record FavoriteCreateResponse(
         @Schema(description = "즐겨찾기 id")
-        Long favoriteId
+        Long favoriteId,
+        @Schema(description = "즐겨찾기 id")
+        String title
+
 ) {
     public static FavoriteCreateResponse from(Favorite favorite) {
         return new FavoriteCreateResponse(
-                favorite.getId()
+                favorite.getId(),
+                favorite.getTitle()
         );
     }
 }

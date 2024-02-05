@@ -105,7 +105,7 @@ public class NutritionFactService {
     * 음식 영양정보 id를 통해 음식 영양정보 데이터 가져오는 메소드
     * 값이 없을 경우 NotFound 예외 발생
     * */
-    public NutritionFact findId(Long id){
+    public NutritionFact findById(Long id){
         return nutritionFactRepository.findById(id)
                 .orElseThrow(()-> new ErrorException(ErrorCode.NOT_FOUND_NUTRITION_FACT));
     }

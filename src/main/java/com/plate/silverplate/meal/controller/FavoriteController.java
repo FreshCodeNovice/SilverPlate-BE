@@ -1,6 +1,7 @@
 package com.plate.silverplate.meal.controller;
 
 import com.plate.silverplate.meal.dto.request.FavoriteCreateRequest;
+import com.plate.silverplate.meal.dto.request.FavoriteUpdateRequest;
 import com.plate.silverplate.meal.dto.response.FavoriteCreateResponse;
 import com.plate.silverplate.meal.service.FavoriteService;
 import com.plate.silverplate.user.domain.entity.User;
@@ -27,6 +28,12 @@ public class FavoriteController {
         FavoriteCreateResponse response = favoriteService.createFavorite(user, favoriteCreateRequest);
         return ResponseEntity.ok().body(response);
     }
-
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> update(@AuthenticationPrincipal User user,
+            @Valid @RequestBody FavoriteUpdateRequest favoriteUpdateRequest,
+                                    @PathVariable Long id){
+        favoriteService.updateFavorite(user,id,favoriteUpdateRequest);
+        return ResponseEntity.ok().body("su");
+    }
 
 }
